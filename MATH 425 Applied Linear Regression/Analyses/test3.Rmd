@@ -15,8 +15,108 @@ knitr::opts_chunk$set(
 	echo = FALSE)
 ```
 
-
 ```{r}
+library(tidyverse)
+library(ggpubr)
+```
+
+
+
+## Sampling Distributions
+
+**Define the term "sampling distribution."**
+
+This is represented by "**N**"
+
+Sampling Distribution is when we start from the population, decide our sample size (*n*, lowercase) by by which we can make a distribution, then decide the number of repetitions to take that sample size and make distributions.  (*N*, uppercase) times and create a distribution of those N distributions.
+
+
+**Demonstrate how the sampling distribution is obtained for both the slope and the intercept estimates in regression.**
+
+Create data (as shown in the code block), run regressions on them, then index the slopes and y-intercepts to store them for use creating histograms. Finally, create histograms of the slopes and y-intercepts. 
+
+
+**Clearly explain what the mean and standard deviation (often called the standard error) are for each of these two distributions.**
+
+When histograms are made of all those stored y-ints and slopes, the middle of it is the mean. This is not to be confused with the standard deviation. Standard deviation is the spread of the data, the standard error is the spread of the y-intercept/slope histograms.
+
+
+**Most importantly, provide thorough explanation of what the standard error measures.**
+
+The standard error is 1 standard deviation of the slope. This means is measures how likely the y-intercept/slope varies from the population mean (true mean). 
+
+
+
+<br>
+
+## P-values
+
+
+**Demonstrate how the standard errors of the sampling distributions for both the slope and intercept estimates are used to obtain p-values for the tests of hypotheses about β0and β1(the true intercept and slope of the regression model). **
+
+In the normal lm() function we use for linear regression, the null and alternative hypotheses are set to 0. We can change this by calculating the t-value. This is done by
+
+
+$$ 
+\frac{ \text{(slope estimate - null hypothesis)} } {\text{slope of standard error} } 
+$$
+
+
+
+
+**Discuss why this works. **
+
+This is the same behind the scene math that the lm() function uses, but the null hypothesis is set to 0. 
+
+**Reveal the logic behind the p-value.**
+
+We can calculate the p-value using the calculated t-vale from above. 
+The p-value is the negative absolute value of the t-value (based on the degrees of freedom).
+
+
+
+<br>
+
+## Confidence Intervals
+
+**Demonstrate how the standard errors are also used to create confidence intervals for the true regression intercept, β0, and true regression slope, β1.**
+
+The standard error is used to obtain a t-value (along with the null hypothesis and standard error).
+
+The t-value is used to obtain a p-value. It's done my taking the t-distribution (think 221 applet from class), warp it based on the degrees of freedom, then calculate the t-value based on that. 
+
+P value is the left tail of the distribution * multiplied by 2. 
+In other words, it's the negative absolute value of the t-value based on the degrees of freedom. 
+
+
+**Explain what a confidence interval really is... explain why it captures the true parameter values "95% of the time."**
+
+For this section we'll use a 95% confidence interval. The estimate of concern will be the slope. This confidence interval percentage can be changed as desired and the slope is interchangeable with the y-intercept. 
+
+A confidence interval is a lower an upper bound containing the slope. It is based on the given slope value and the upper and lower bounds are made by the formula:
+
+$$
+  b_1 \pm t^*_{n-2}\cdot s_{b_1}
+$$
+<!-- $$ -->
+<!--   b_0 \pm t^*_{n-2}\cdot s_{b_0} -->
+<!-- $$ -->
+
+This formula is the test statistic at n-2 degrees of freedom multiplied by the standard error of the sample.
+
+It is confident that it contains the slope 95% of the time. 
+
+
+<br>
+
+
+#### Appendix
+
+Click on the code button to see the logic logic behind the creation of the plots below.
+These plots are used in the following analysis for instruction. Please refer to them as needed.
+
+
+```{r echo = TRUE}
 # Important Simulation Fun
 
 N <- 500 # reps of how many times you'll grab your samples
@@ -38,120 +138,21 @@ for (i in 1:N){
     # rnorm(n, mean, constant variance)
     # this is sigma squared (numerator of standard error)
 
-  
   mylm <- lm(Yi ~ Xi) 
   
   yint[i] <- coef(mylm)[1] #intercept only
   slope[i] <- coef(mylm)[2] #slope only
 }
-hist(yint) # histogram of all the y-intercepts made from the "N" repetitions of the n sample size and the data created by the Xi and Yi values.
-hist(slope) #
-plot(Yi ~ Xi)
-
-
-#standard error: spread of statistics (b0 and b1)
-
 
 ```
 
 
-<br>
 
-## Sampling Distributions
+```{r fig.height = 3.5, echo = TRUE}
+hist(yint) # histogram of all the y-intercepts made from the "N" repetitions of the n sample size and the data created by the Xi and Yi values.
+hist(slope) 
+plot(Yi ~ Xi)
+```
 
-**Define the term "sampling distribution."**
-
-"N"
-
-Sampling Distribution is when we start from the population, decide our sample size (*n*, lowercase) by by which we can make a distribution, then decide the number of repetitions to take that sample size and make distributions.  (*N*, uppercase) times and create a distribution of those N distributions.
-
-
-**Demonstrate how the sampling distribution is obtained for both the slope and the intercept estimates in regression.**
-
-Create data (which uses "N"), run regressions on them, index and store the slopes and intercepts into 
-
-Create historgrams of theme
-
-
-**Clearly explain what the mean and standard deviation (often called the standard error) are for each of these two distributions.**
-
-Make histograms of all those stored y-ints and slopes, the middle of it is the mean, the (FILL IN THE BLANK HERE ABOUT WHAT THE STANDARD ERROR IS) is the standard error
-
-STD Error is how spread out the histograms are
-
-
-**Most importantly, provide thorough explanation of what the standard error measures.**
-
-If std error of slope is 2, 68  of slope are in 
-68, 95, 99.7 applies to the standard error. 
-
-
-
-<br>
-
-## P-values
-
-similar to summary outputs in lm
-
-
-**Demonstrate how the standard errors of the sampling distributions for both the slope and intercept estimates are used to obtain p-values for the tests of hypotheses about β0and β1(the true intercept and slope of the regression model). **
-
-In the normal lm() function we use for linear regression, the null and alternative hypotheses are set to 0. We can change this by calculating the t-value and p-value by hand. This is done by
-
-
-$$ 
-\frac{ \text{(slope estimate - null hypothesis)} } {\text{slope of standard error} } 
-$$
-
-
-THis is a paragraph with LaTeX inline $\sigma^2_{b_1} = \frac{\sigma^2}{\sum(X_i-\bar{X})^2}$
-
-
-**Discuss why this works. **
-
-
-**Reveal the logic behind the p-value.**
-
-The p-value is the negative absolute value of the t-value (based on the degrees of freedom)
-
-
-
-<br>
-
-## Confidence Intervals
-
-**Demonstrate how the standard errors are also used to create confidence intervals for the true regression intercept, β0, and true regression slope, β1.**
-
-I think this has to do with the logic of the code we were playing with
-
-The standard error is used to obtain a t-value (along with the null hypothesis and standard error) as shown by the equation below. 
-
-
-The t-value is used to obtain a p-value. It's done my taking the t-distribution (think histogram with with the line over it), warp it based on the degrees of freedom, then calculate the t-value based on that. 
-P value is the left tail of the distribution * multiplied by 2. 
-In other words, it's the negative absolute value of the t-value based on the degrees of freedom.  The equation is also shown below.
-
-
-
-**Explain what a confidence interval really is... explain why it captures the true parameter values "95% of the time."**
-
-For this section we'll use a 95% confidence interval. The estimate of concern will be the slope. This confidence interval percentage can be changed as desired and the slope is interchangeable with the y-intercept. 
-
-margin of error. It's found by 
-A confidence interval is a lower an upper bound containing the slope. It is based on the given slope value and the upper and lower bounds are made by the formula:
-
-$$
-  b_1 \pm t^*_{n-2}\cdot s_{b_1}
-$$
-<!-- $$ -->
-<!--   b_0 \pm t^*_{n-2}\cdot s_{b_0} -->
-<!-- $$ -->
-
-This formula is the test statistic at n-2 degrees of freedom multiplied by the standard error of the sample.
-
-It is confident that it contains the slope 95% of the time. 
-
-
-<br>
 
 <br>
