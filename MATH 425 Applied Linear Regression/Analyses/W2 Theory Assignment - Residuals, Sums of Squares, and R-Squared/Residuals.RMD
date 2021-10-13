@@ -1,0 +1,199 @@
+---
+title: "Theory Assignment - Residuals, Sums of Squares, and R-Squared"
+author: "Brigham Eaquinto"
+date: "9/23/2021"
+output:
+  rmdformats::robobook:
+    toc_depth: 3
+    highlight: default  
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+```{r libraries, include=FALSE}
+library(tidyverse)
+library(readxl)
+```
+
+
+
+This document will perform a linear regression using a weather data set on the maximum air pressure and max wind speed. We will diagnose five important aspects of this regression: **residuals, SSE, SSR, SSTO, and R-Squared**. At the end of this study guide you will have a better understanding of the importance of these in a linear regression. 
+
+
+
+```{r data}
+weather_data <- read_csv("C:/Users/brigh/OneDrive - BYU-Idaho/8th Semester- Fall 2021/MATH 425 Applied Linear Regression/Analyses/data/weather_data.csv")
+# View(weather_data)
+
+mylm <- lm(pressure_max~wind_mph_max, data = weather_data)
+# summary(mylm) 
+
+regression_plot <- ggplot(weather_data, aes( wind_mph_max, pressure_max))+
+  geom_point(size = 3)+
+  geom_smooth(method = "lm", formula = y~x, se = FALSE)+
+  labs(title = "Relationship Between Max Wind Speed and Max Air Pressure", 
+       subtitle = "",
+       caption = "",
+       x = "Max Wind Speed (MPH)", 
+       y = "Max Air Pressure")+
+  theme_test()+
+  theme(
+    plot.margin = margin(0.5, 0.5, 0.5, 0.5, unit = "cm"),
+    plot.title = element_text(size = 14, face = "bold"),
+    plot.subtitle = element_text(size = 10),
+    plot.title.position = "plot",
+    plot.caption.position = "plot",
+    plot.caption = element_text(margin = margin(t = 0.2, b = 0, unit = "cm"), size = 7),
+    axis.title = element_text(size = 8),
+    axis.title.x = element_text(margin = margin(t = 0.25, b = 0, unit = "cm"), face = "bold"),
+    axis.title.y = element_text(margin = margin(r = 0.25, l = 0, unit = "cm"), face = "bold"),
+    axis.text = element_text(size = 8),
+    legend.position = "top",
+    legend.title = element_blank(),
+    legend.text = element_text(size = 8),
+    panel.grid.major.y = element_line(color = "gray90"),
+    panel.grid.minor.y = element_blank(),
+    panel.grid.major.x = element_blank(), 
+    panel.grid.minor.x = element_blank())
+
+regression_plot
+
+```
+
+
+
+
+
+### **Residuals**
+
+Definition: 
+  
+  - the difference between an observed y-value point and an estimated y-value point
+  - this gives insight about how much an individual of a given x-value differs from average in their y-value
+    
+Use: 
+
+  1. Residuals are key to obtaining the "least squares estimates" of the regression parameters β0 and β1.
+  2. Residuals are an important part in measuring the R^2 value of a regression, which is the proportion of variation in Y explained by the regression model. 
+  3. Third, residuals give insight about how much an individual of a given x-value differs from average in their y-value. 
+  4. Fourth, residuals can be used to estimate the variance parameter of a regression (σ^2) in the equation
+  5. Fifth, residuals can be used to determine if a linear regression model is appropriate for a given data set
+    
+
+
+```{r}
+
+dat2 <- data.frame("x" = c("8", "8"),
+                   "y" = c("25.398", "25.3"))
+
+regression_plot +
+  geom_line(data = dat2, 
+            mapping = aes(x=as.numeric(x), y=as.numeric(y)), 
+            size = 2, 
+            color = "black")+
+  geom_point(data = dat2, aes(x=as.numeric(x), y=as.numeric(y)), size = 5)+ 
+  labs(title = "Residuals Visualized", 
+       subtitle = str_wrap("Residual: The distance (black line) between y-hat and the observed data", 115)) 
+```
+
+
+### **Sum of Squared Error (Residuals) (SSE)**
+
+Definition: 
+
+  - This stands for "Sum of Squares r*E*esiduals"
+  - It is the measure of total variation in Y, which is the distance of the observed data to the y-hat/average slope/regression line (it's all the same thing)
+  
+Use: 
+
+  - Helps measure the variation of observed data (similar to the use of a histogram)
+  - If SSE and SSE are the same, the correlation in this regression is very tight, which means is a good fit
+  
+Equation: 
+  $SSE = \sum_{i=1}^n (Y_i - \hat{Y}_i)^2$
+  
+
+
+```{r}
+regression_plot +
+    geom_rect(aes(xmin = 6.7, 
+                  xmax = 9, 
+                  ymin = 25.3,
+                  ymax = 25.385), color = "firebrick", fill = "white")+ 
+  geom_text(aes(x = 7.9, 
+                y = 25.349, 
+                label="SSE"))+ 
+  labs(title = "SSE Visualized", 
+       subtitle = str_wrap("SSE: The distance between the regression line and the observed data. The example only shows the case for one data point, but this is true for all data points. To keep from clutter, only one example is shown.", 115))
+```
+
+
+### **Sum of Squared Regression Error (SSR)**
+
+Definition: 
+
+  - Distance from the regression line to y-bar(the dashed horizontal line showing the mean of all y-values)
+  
+Equation: 
+  $SSR = \sum_{i=1}^n (\hat{Y}_i - \bar{Y})^2$
+  
+
+```{r}
+regression_plot+
+  geom_hline(yintercept = mean(weather_data$pressure_max), linetype = "dotted", color = "#DC143C")+
+  geom_text(label = "y-bar (mean of all y values)", x = 9, y = 25.29)+
+  geom_rect(aes(xmin = 24, 
+                xmax = 25.5, 
+                ymin = 25.26,
+                ymax = 25.3), color = "firebrick", fill = "white")+ 
+  geom_text(aes(x = 24.8, 
+                y = 25.28, 
+                label="SSR"))+
+  geom_vline(xintercept = 24, color = "gray80")+
+  labs(title = "SSR Visualized", 
+       subtitle = paste0(str_wrap("SSR: The distance between the regression line and y-bar", 100), "\n", 
+                         str_wrap("This is the SSR of the values observed at Max Wind Speed 24 MPH. In reality there are three of the boxes dipicted that over lap each other. This may be confusing but remember that the SSR is the distance from the regression line to y-bar of each observed data point at it's x value; whereas SSE is the distance from the regression line to the observed data points.", 115)))
+```
+
+  
+### **Total Sum of Squares (SSTO)**
+
+Definition: 
+
+  - This stands for *Total Sum of Squares*. Measure of total variation in Y
+  - SSE + SSR = SSTO
+  
+Equation: 
+  $SSR + SSE = SSTO = \sum_{i=1}^n (Y_i - \bar{Y})^2$
+
+
+### **R-Squared**
+
+Definition:
+  
+  - Proportion of variation in Y explained by the regression
+
+We get R^2 by SSR / SSTO. 
+
+The plots below visualize the differences in r-squared values
+
+
+```{r}
+par(mfrow=c(1,3), mai=c(.1,.1,.5,.1))
+set.seed(2)
+x <- runif(30,0,20)
+y1 <- 2 + 3.5*x + rnorm(30,0,2)
+y2 <- 2 + 3.5*x + rnorm(30,0,8)
+y3 <- 2 + 3.5*x + rnorm(30,0,27)
+plot(y1 ~ x, pch=16, col="darkgray", xlim=c(-1,21), yaxt='n', xaxt='n', ylim=c(-10,100), main="Excellent Fit (r^2 = 1)")
+abline(lm(y1 ~ x), col="gray")
+plot(y2 ~ x, pch=16, col="darkgray", xlim=c(-1,21), yaxt='n', xaxt='n', ylim=c(-10,100), main="Good Fit (r^2 = 0.5)")
+abline(lm(y2 ~ x), col="gray")
+plot(y3 ~ x, pch=16, col="darkgray", xlim=c(-1,21), yaxt='n', xaxt='n', ylim=c(-10,100), main="Poor Fit (r^2 = 0.1)")
+abline(lm(y3 ~ x), col="gray")
+```
+
+<br>

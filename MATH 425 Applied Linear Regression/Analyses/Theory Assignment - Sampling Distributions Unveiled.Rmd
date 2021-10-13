@@ -1,0 +1,78 @@
+---
+title: "Theory Assignment - Sampling Distributions Unveiled"
+author: "Brigham Eaquinto"
+date: "10/9/2021"
+output:  html_document
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	eval = FALSE,
+	message = FALSE,
+	warning = FALSE,
+	include = FALSE
+)
+```
+
+# Sampling Distributions
+
+**Define the term "sampling distribution."**
+
+Sampling Distribution is when we start from the population (the law), grab *n* (lowercase) samples from it to create a distribution, then do that *N* (uppercase) times and create a distribution of those N distributions.
+
+Simulation Example:
+
+
+
+**Demonstrate how the sampling distribution is obtained for both the slope and the intercept estimates in regression.**
+
+Remember in 221, this website showed the process starting with the population, then it grabbed n samples, then did that N times, and created a histogram of the N means. The center of that histogram is equal to the population mean. It is represents by the formula: {insert the equation, sample of samples = mu}. Instead of finding the mean of the means, we are going to find the means of the slopes (B0) and y-intercepts (B1).
+
+
+**Clearly explain what the mean and standard deviation (often called the standard error) are for each of these two distributions. **
+
+The mean is the estimate, or the center of the histogram. (create two histograms for B0 and B1). The standard error is the spread of the statistic.
+
+
+**Most importantly, provide thorough explanation of what the standard error measures.**
+
+The standard error is similar to the standard deviation.
+
+Standard Deviation: Measures the spread of *data*
+
+*Standard Error*: Measures the spread of a *statistic*
+
+
+
+
+# P-values
+
+**Demonstrate how the standard errors of the sampling distributions for both the slope and intercept estimates are used to obtain p-values for the tests of hypotheses about β0and β1(the true intercept and slope of the regression model). **
+
+In the normal lm() function we use for linear regression, the null and alternative hypotheses are set to 0. We can change this by calculating the t-value and p-value by hand. This is done by
+
+Or does this work well?
+
+<!-- $ \frac{ \text{(slope estimate - null hypothesis)} } {\text{slope of standard error} } $ -->
+
+<!-- maybe this works well! -->
+
+<!-- $\sigma^2_{b_1} = \frac{\sigma^2}{\sum(X_i-\bar{X})^2} = \frac{`r sigma`^2}{`r sum((X-mean(X))^2)`}$ -->
+
+**Discuss why this works. **
+
+
+**Reveal the logic behind the p-value.**
+
+
+
+
+# Confidence Intervals
+
+Demonstrate how the standard errors are also used to create confidence intervals for the true regression intercept, β0, and true regression slope, β1.
+Explain what a confidence interval really is... explain why it captures the true parameter values "95% of the time."
+
+
+

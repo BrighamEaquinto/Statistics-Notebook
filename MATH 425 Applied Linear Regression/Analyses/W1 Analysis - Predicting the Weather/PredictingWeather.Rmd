@@ -1,0 +1,318 @@
+---
+title: "Predicting the Weather"
+output:
+  rmdformats::robobook:
+    toc_depth: 3
+    highlight: default  
+    code_folding: hide
+---
+
+<!-- output: -->
+<!--   prettydoc::html_pretty: -->
+<!--   keep_md: true -->
+<!--   toc: true -->
+<!--   toc_float: true -->
+<!--   code_folding: hide -->
+<!--   fig_align: 'center' -->
+
+<!-- "default", "bootstrap", "cerulean", "cosmo", "darkly", "flatly", "journal", "lumen", "paper", "readable", "sandstone", "simplex", "spacelab", "united", "yeti" -->
+  <!-- html_document: -->
+  <!--   theme: bootstrap -->
+  <!--   code_folding: hide -->
+  <!--   fig_align: 'center' -->
+  <!--   toc_float: true -->
+
+
+<!-- 
+Notes
+
+- The idea of this is to take in a few factors to make a beast of an x value. Just using one thing to predict the temperature will not be a strong model
+
+- We also have to make our own data
+
+- Assignment link: https://byui.instructure.com/courses/152366/assignments/6550153?module_item_id=17728910
+- data from: https://www.wunderground.com/history/weekly/us/id/idaho-falls/KIDA/date/2021-9-15
+
+- Factors that influence temperature: c(wind speed, wind frequency?, carbon dioxide, air temperature, air pressure, humidity, amount and kind of cloud cover, amount and kind of precipitation, speed and direction of the wind, temperature, pressure, moisture content, )
+                                      c(latitude, nearness to centers of large landmasses, nearness to large bodies of water, location relative to large mountain ranges, elevation, ocean currents, altitude, orbital distance from the sun, )
+                                      c(prevaling wind direction?, vegitation, earths rotation, )
+- The three main factors of weather are light (solar radiation), water (moisture) and temperature.
+
+- Combine with math, put on a scale, log scale?, 
+
+-->
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+```{r}
+# Libraries
+library(tidyverse)
+library(readxl)
+library(pander)
+library(DT)
+
+
+# Data
+weather_data <- read.csv("C:/Users/brigh/OneDrive - BYU-Idaho/8th Semester- Fall 2021/MATH 425 Applied Linear Regression/Analyses/data/weather_data.csv") 
+# View(weather_data) 
+
+```
+
+
+```{r}
+# Wrangling
+weather_data <- weather_data %>% 
+  filter(temp_max != "NA",
+         day != 15) %>%
+  mutate(Year = as.numeric(Year), 
+         day = as.numeric(day), 
+         temp_max = as.numeric(temp_max), 
+         temp_mean = as.numeric(temp_mean), 
+         temp_min = as.numeric(temp_min), 
+         dew_max = as.numeric(dew_max),
+         dew_mean = as.numeric(dew_mean),
+         dew_min = as.numeric(dew_min), 
+         # `hum_max%` = as.numeric(`hum_max%`), 
+         # `hum_mean%` = as.numeric(`hum_mean%`),
+         # `hum_min%` = as.numeric(`hum_min%`), 
+         wind_mph_max = as.numeric(wind_mph_max), 
+         wind_mph_mean = as.numeric(wind_mph_mean), 
+         wind_mph_min = as.numeric(wind_mph_min), 
+         pressure_max = as.numeric(pressure_max), 
+         pressure_mean = as.numeric(pressure_mean), 
+         pressure_min = as.numeric(pressure_min), 
+         precipitation_total_in = as.numeric(precipitation_total_in))
+# weather_data
+
+dat_prior <- weather_data %>% 
+  filter(day == 16 | day == 17 | day == 18) %>% 
+  group_by(Year) %>% 
+  summarize(prior_max_temp = mean(temp_max), 
+            prior_mean_temp = mean(temp_mean),
+            prior_min_temp = mean(temp_min), 
+            prior_dew_max = mean(dew_max), 
+            prior_dew_mean = mean(dew_mean), 
+            prior_dew_min = mean(dew_min), 
+            # `prior_hum_max%` = mean(`hum_max%`),
+            # `prior_hum_mean%` = mean(`hum_mean%`), 
+            # `prior_hum_min%` = mean(`hum_min%`), 
+            prior_wind_mph_max = mean(wind_mph_max), 
+            prior_wind_mph_mean = mean(wind_mph_mean), 
+            prior_wind_mph_min = mean(wind_mph_min), 
+            prior_pressure_max = mean(pressure_max), 
+            prior_pressure_mean = mean(pressure_mean), 
+            prior_pressure_min = mean(pressure_min), 
+            prior_precipitation_total_in = mean(precipitation_total_in)) %>%  
+  round()
+# dat_prior  
+
+dat_post <- weather_data %>% 
+  filter(day == 20) %>%
+  group_by(Year) %>% 
+  summarize(post_max_temp = mean(temp_max), 
+            post_mean_temp = mean(temp_mean),
+            post_min_temp = mean(temp_min), 
+            post_dew_max = mean(dew_max), 
+            post_dew_mean = mean(dew_mean), 
+            post_dew_min = mean(dew_min), 
+            # `post_hum_max%` = mean(`hum_max%`),
+            # `post_hum_mean%` = mean(`hum_mean%`), 
+            # `post_hum_min%` = mean(`hum_min%`), 
+            post_wind_mph_max = mean(wind_mph_max), 
+            post_wind_mph_mean = mean(wind_mph_mean), 
+            post_wind_mph_min = mean(wind_mph_min), 
+            post_pressure_max = mean(pressure_max), 
+            post_pressure_mean = mean(pressure_mean), 
+            post_pressure_min = mean(pressure_min), 
+            post_precipitation_total_in = mean(precipitation_total_in)) %>% 
+  round() %>% 
+  mutate()
+  
+# dat_post
+
+
+# joined data
+dat <- dat_prior %>% 
+  left_join(dat_post, by = "Year")
+# dat <- dat %>%)
+  
+
+new_dat <- weather_data %>% 
+    summarize(max_temp = mean(temp_max), 
+            mean_temp = mean(temp_mean),
+            min_temp = mean(temp_min), 
+            dew_max = mean(dew_max), 
+            dew_mean = mean(dew_mean), 
+            dew_min = mean(dew_min), 
+            # `hum_max%` = mean(`hum_max%`),
+            # `hum_mean%` = mean(`hum_mean%`), 
+            # `hum_min%` = mean(`hum_min%`), 
+            wind_mph_max = mean(wind_mph_max), 
+            wind_mph_mean = mean(wind_mph_mean), 
+            wind_mph_min = mean(wind_mph_min), 
+            pressure_max = mean(pressure_max), 
+            pressure_mean = mean(pressure_mean), 
+            pressure_min = mean(pressure_min), 
+            precipitation_total_in = mean(precipitation_total_in)) %>% 
+  round() %>% 
+      mutate(y = max_temp, 
+         x = min_temp)
+
+  new_dat <- weather_data %>% 
+    mutate(y = temp_max, 
+           x = temp_min)
+
+  
+# Terrible attempt: -331
+  # mutate(y = max_temp - (pressure_max*.25) * `hum_max%`, 
+  #        x = min_temp - (pressure_min*.25) * `hum_min%`)
+
+
+```
+
+
+```{r}
+mylm <- lm(y~x, data = new_dat)
+# summary(mylm)
+prediction <- predict(mylm, data.frame(x = 43)) %>% round()
+```
+
+### Introduction
+
+The following report intends to predict the high temperature for September 20, 2021 using a liner regression model. Data was sourced from [WUnderGround.com](wunderground.com). The factors provides are maximum and minimum temperatures, dew points, humidity percentages, wind speed (mph), air pressures, and the total precipitation (in). Minimum temperature will be used to predict the maximum temperature. 
+
+
+
+
+
+<br>
+
+### Maximum Temperature for 9/20/21
+
+The prediction is: 
+$$
+71(°F) 
+$$
+
+```{r}
+
+ggplot(new_dat, aes(x, y))+
+  geom_point()+
+  geom_smooth(method = "lm", formula = y~x, se = FALSE)+ 
+  geom_vline(xintercept = 43, linetype = "longdash")+
+  geom_hline(yintercept = prediction, linetype = "longdash")+
+  geom_point(x = 43, y = prediction, size = 5, color = "firebrick")+
+    labs(title = "Monday (9/20) High Temp Prediction: 71 Degrees Farenheight", 
+       subtitle = "",
+       x = "Explanatory Variable: Minimum Temperature", 
+       y = "Response Variable: Maximum Temperature")+
+  scale_y_continuous(limits = c(45, 90),
+                     breaks = seq(0, 100, by = 5))+ 
+  theme_test()+
+  theme(
+    plot.margin = margin(0.5, 0.5, 0.5, 0.5, unit = "cm"),
+    plot.title = element_text(size = 14, face = "bold"),
+    plot.subtitle = element_text(size = 10),
+    plot.title.position = "plot",
+    plot.caption.position = "plot",
+    plot.caption = element_text(margin = margin(t = 0.2, b = 0, unit = "cm"), size = 7),
+    axis.title = element_text(size = 8),
+    axis.title.x = element_text(margin = margin(t = 0.25, b = 0, unit = "cm"), face = "bold"),
+    axis.title.y = element_text(margin = margin(r = 0.25, l = 0, unit = "cm"), face = "bold"),
+    axis.text = element_text(size = 8),
+    legend.position = "top",
+    legend.title = element_blank(),
+    legend.text = element_text(size = 8),
+    panel.grid.major.y = element_line(color = "gray90"),
+    panel.grid.minor.y = element_blank(),
+    panel.grid.major.x = element_blank(), 
+    panel.grid.minor.x = element_blank()
+       )
+
+```
+
+
+
+
+
+### Analysis
+
+
+This analysis attempts to model the maximum temperature for 9/20/21 according to historical data using a linear regression. Specifically, 
+$$
+  \underbrace{Y_i}_\text{max temp} = \overbrace{\beta_0}^\text{y-int} + \overbrace{\beta_1}^\text{slope} \underbrace{X_i}_\text{min temp} + \epsilon_i \quad \text{where} \ \epsilon_i \sim N(0, \sigma^2) 
+$$
+No changes have been made to the variables used. After failed attempts of combining multiple factors by multiplication, division, addition, and subtraction, to produce an estimate, the best model is the most simple. 
+
+Our application renders the model as so,
+$$
+  \underbrace{\hat{Y}_i}_\text{max temp} = \overbrace{78.8164}^\text{y-int} - \underbrace{0.1838}_\text{slope} \overbrace{X_i}^\text{min temp} 
+$$
+
+<br>
+
+Hypotheses and alpha set:   
+$$
+  H_0: \beta_1 = 0
+$$
+
+$$
+  H_a: \beta_1 \neq 0
+$$
+
+$$
+  \alpha = 0.05
+$$
+
+
+<br> 
+
+The results show that the y-intercept proves significant but the slope is not significant. This means that the strength of the relationship between the minimum temperature and the maximum temperature is not trustworthy to use on to predict the other, which is what we did this this regression. A wise statistician is familiar with the quote, "All models are wrong, some are useful."  In this case the p-value did not pass the level of significance (alpha) we set. 
+
+This model failed but it still does help us though with some amount of knowledge in understanding the weather. 
+```{r}
+pander(summary(mylm), covariate.labels = c('Y-int', 'Slope')) 
+```
+
+
+### Assumptions
+
+###### Two met, one failed
+
+```{r}
+# Assumptions
+
+par(mfrow=c(1,3))
+plot(mylm,which=1:2)
+plot(mylm$residuals)
+```
+
+**Residuals Vs Fitted Plot**: 
+
+The linear relationship and constant variance are in question here. What we want is to not have a noticeable relationship in this graph. 
+
+Although the red line is not completely flat, the data does not show any patterns. Because of this, we are confident with the linear relation and constant variance. 
+
+
+**QQ Plot**:
+
+This graph checks for the normality of the error terms. This takes a look at the residuals to check for normality. 
+
+This visualization causes reason to believe that the distribution is not exactly normal, but "heavy-tailed". This means that error terms are not normal; this test does not pass. 
+
+
+**Residuals-Order Plot**: 
+
+This plot can tell us if there is any bias the data. If there are any general trends or patterns, the error terms are considered not independent and the regression assumption is violated. 
+
+Our plot does not cause reason to believe the regression assumption is violated. 
+
+<br>
+
+### The Data
+This is the full data table of the data.
+
+```{r}
+datatable(new_dat, options = list(lengthMenu = c(10, 27)), extensions="Responsive")
+```

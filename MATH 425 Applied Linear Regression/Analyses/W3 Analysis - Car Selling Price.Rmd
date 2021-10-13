@@ -1,0 +1,360 @@
+---
+title: "Analysis - Car Selling Price"
+author: "Brigham Eaquinto"
+date: "10/1/2021"
+output:
+  rmdformats::robobook:
+    toc_depth: 3
+    highlight: default  
+    code_folding: hide
+---
+
+<!-- 
+
+- Include the applied model typed out
+- The ideas is the cost per mile
+
+Perform a simple linear regression analysis for Price and Mileage of your vehicle using an appropriate Y transformation as suggested by the Box-Cox transformation. Using the log(Y) transformation is preferred if possible because it is interpretable, but use whichever transformation appears best based on the Box-Cox method.
+
+Present your graphic and conclusions first. 
+Then, also show all of the technical details required for a complete regression analysis, including: 
+  - mathematical details about your selected y-transformation, as an "Appendix" or hidden tab. 
+  - The focus of this analysis is on the graphic and conclusions from that graphic. However, for completeness, you must also include all of your supporting work as "hidden details" for those interested (like your teacher).
+
+Perform an analysis that clearly demonstrate your vehicle "purchase cost per mile" by comparing the price you paid (or current price and milage) to the price and mileage for when you plan to sell. Discuss if there is a best time to sell to get the best dollar-per-mile value with regards to the purchasing costs of the vehicle. Show some calculations supporting your conclusion on when to sell (at what mileage) and how much to try to sell it for so that you get the "best purchase cost per mile" that you can.
+-->
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+
+```{r libraries, include=FALSE}
+library(tidyverse) 
+library(readr) 
+library(car) #for the boxCox() function
+library(lindia) # for the gg_goxcox()
+library(DT) # for the datatable()
+
+options(scipen = 5) # this fixes the scientific notation problem in the mileage data
+# getOption("scipen")
+# options()
+
+car_data <- read_csv("C:/Users/brigh/OneDrive - BYU-Idaho/8th Semester- Fall 2021/MATH 425 Applied Linear Regression/Analyses/data/car_data.csv")
+  
+# View(car_data)
+```
+
+### Steep Price Decrease After Driving Off the Lot  
+
+It is common knowledge that once the paperwork is signed to purchase a car and the new owner drives away, thousands of dollars of value is dropped when it leave the parking lot. This principle means that even if the driver turns around with a changed mind on their minutes old purchase, they will not be able to get their full price back — by thousands of dollars. 
+
+This analysis gives answers to the question of how much value the Toyota Corolla holds at difference mileages in it's lifetime. The data considered in the analysis ranges from cars years 1994 - 2021, and about 10 different makes. These factors are not discussed in the analysis, but it is worth noting that there is opportunity for further study beyond the purpose of this report.
+
+
+$$
+  \text{Price of Car} = 9.959 - 0.00001129 \times \text{(Mileage)}
+$$
+
+
+```{r}
+
+ggplot(car_data, aes(x=Miles, y=Price)) + 
+  geom_point(color="navyblue", size = 3) +
+  geom_smooth(method = "lm", formula = y ~ log(x), se = FALSE, color = "orange")+
+  scale_x_continuous(labels = scales::comma)+
+  labs(title="Corolla Looses Value Sharply In First 75,000 Miles",
+       # subtitle = str_wrap("The condition to buy a Corolla for the best monetary value is around that 100,000 mile mark", 100),
+       x="Mileage", 
+       y="Price") + 
+  theme_test()+
+  theme(
+    plot.margin = margin(0.5, 0.5, 0.5, 0.5, unit = "cm"),
+    plot.title = element_text(size = 14, face = "bold"),
+    plot.subtitle = element_text(size = 10),
+    plot.title.position = "plot",
+    plot.caption.position = "plot",
+    plot.caption = element_text(margin = margin(t = 0.2, b = 0, unit = "cm"), size = 7),
+    axis.title = element_text(size = 8),
+    axis.title.x = element_text(margin = margin(t = 0.25, b = 0, unit = "cm"), face = "bold"),
+    axis.title.y = element_text(margin = margin(r = 0.25, l = 0, unit = "cm"), face = "bold"),
+    axis.text = element_text(size = 8),
+    legend.position = "top",
+    legend.title = element_blank(),
+    legend.text = element_text(size = 8),
+    panel.grid.major.y = element_line(color = "gray90"),
+    panel.grid.minor.y = element_blank(),
+    panel.grid.major.x = element_blank(), 
+    panel.grid.minor.x = element_blank()
+       )
+```
+
+<br>
+
+### Analysis 
+
+A simple linear regression was preformed to produce the results shown in the abstract. The explanatory variable used is car mileage and the response variable is car price. The standard model of simple linear regression was applied at first, followed by transformations in a later regression. This is the model used:
+
+$$
+  \underbrace{Y_i}_\text{Price} = \overbrace{\beta_0}^\text{y-int} + \overbrace{\beta_1}^\text{slope} \underbrace{X_i}_\text{Mileage} + \epsilon_i \quad \text{where} \ \epsilon_i \sim N(0, \sigma^2)
+$$
+
+##### Summary of the Regression
+```{r}
+# Simple Regression
+mylm.log <- lm(log(Price) ~ Miles, data = car_data)
+summary(mylm.log) %>% pander::pander()
+```
+
+The applied simple linear regression model renders as:
+
+$$
+  \underbrace{\hat{Y}_i}_\text{Price} = 18496 - 0.09022 \underbrace{X_i}_\text{Mileage}
+$$
+
+The hypotheses and alpha of the test are set as:
+
+$$
+  H_0: \beta_1 = 0
+$$
+$$
+  H_a: \beta_1 \neq 0
+$$
+
+$$
+\alpha = 0.5
+$$
+The results show that the slope is significant $(p = 3.008e-17)$. The interpretation of the slope means the car value declines 0.00001 cents with every mile driven.  
+
+
+#### Transformations 
+
+A simple linear regression model of car mileage as the explanatory variable and car price as the response variable renders these results: 
+
+```{r}
+
+mylm <- lm(Price ~ Miles, data = car_data)
+summary(mylm) %>% pander::pander()
+
+
+ggplot(car_data, aes(x=Miles, y=Price)) + 
+  geom_point(color="navyblue", size = 3) +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "orange")+
+  scale_x_continuous(labels = scales::comma)+
+  labs(title="Corolla Looses Value Sharply In First 75,000 Miles",
+       # subtitle = str_wrap("The condition to buy a Corolla for the best monetary value is around that 100,000 mile mark", 100),
+       x="Mileage", 
+       y="Price") + 
+  theme_test()+
+  theme(
+    plot.margin = margin(0.5, 0.5, 0.5, 0.5, unit = "cm"),
+    plot.title = element_text(size = 14, face = "bold"),
+    plot.subtitle = element_text(size = 10),
+    plot.title.position = "plot",
+    plot.caption.position = "plot",
+    plot.caption = element_text(margin = margin(t = 0.2, b = 0, unit = "cm"), size = 7),
+    axis.title = element_text(size = 8),
+    axis.title.x = element_text(margin = margin(t = 0.25, b = 0, unit = "cm"), face = "bold"),
+    axis.title.y = element_text(margin = margin(r = 0.25, l = 0, unit = "cm"), face = "bold"),
+    axis.text = element_text(size = 8),
+    legend.position = "top",
+    legend.title = element_blank(),
+    legend.text = element_text(size = 8),
+    panel.grid.major.y = element_line(color = "gray90"),
+    panel.grid.minor.y = element_blank(),
+    panel.grid.major.x = element_blank(), 
+    panel.grid.minor.x = element_blank()
+       )
+```
+
+
+The results show strong levels of probability of these variables both show as significantly strong. Other metrics outputted give us reason to look into the fit of the regression. Most importantly, we see that the regression line does not fit the data. This means that we will have to transform the data. This handy boxcox plot will show us which is the best transformations to do: 
+
+```{r boxCox}
+gg_boxcox(mylm)+
+  labs(title = expression(paste("Use ", lambda == 0, " i.e., log(...)")))+
+  theme_test()+
+  theme(
+    plot.margin = margin(0.5, 0.5, 0.5, 0.5, unit = "cm"),
+    plot.title = element_text(size = 14, face = "bold"),
+    plot.subtitle = element_text(size = 10),
+    plot.title.position = "plot",
+    plot.caption.position = "plot",
+    plot.caption = element_text(margin = margin(t = 0.2, b = 0, unit = "cm"), size = 7),
+    axis.title = element_text(size = 8),
+    axis.title.x = element_text(margin = margin(t = 0.25, b = 0, unit = "cm"), face = "bold"),
+    axis.title.y = element_text(margin = margin(r = 0.25, l = 0, unit = "cm"), face = "bold"),
+    axis.text = element_text(size = 8),
+    legend.position = "top",
+    legend.title = element_blank(),
+    legend.text = element_text(size = 8),
+    panel.grid.major.y = element_line(color = "gray90"),
+    panel.grid.minor.y = element_blank(),
+    panel.grid.major.x = element_blank(), 
+    panel.grid.minor.x = element_blank()
+       )
+
+```
+
+The graph recommends a lambda to be applied with a range of 0 to 0.6, but 0.2 specifically. This recommendation gives us options, but with 0 being one of the options, this means that we can take the log of the price of cars in our data. This will be the best decision out of the options presented because this is the only option where we loose interpretability of the model. 
+
+Here is the new model, summary, and graph with the logged scale applied (note that this is the same visualization shown in the abstract):
+
+$$
+  \underbrace{\hat{Y}_i}_\text{Price} = 18496 - 0.09022 \underbrace{X_i}_\text{Mileage}
+$$
+
+```{r}
+# Logged Regression Preformed
+mylm.log <- lm(log(Price) ~ Miles, data = car_data)
+summary(mylm.log) %>% pander::pander()
+```
+
+```{r}
+ggplot(car_data, aes(x=Miles, y=Price)) + 
+  geom_point(color="navyblue", size = 3) +
+  geom_smooth(method = "lm", formula = y ~ log(x), se = FALSE, color = "orange")+
+  scale_x_continuous(labels = scales::comma)+
+  labs(title="Corolla Looses Value Sharply In First 75,000 Miles",
+       # subtitle = str_wrap("The condition to buy a Corolla for the best monetary value is around that 100,000 mile mark", 100),
+       x="Mileage", 
+       y="Price") + 
+  theme_test()+
+  theme(
+    plot.margin = margin(0.5, 0.5, 0.5, 0.5, unit = "cm"),
+    plot.title = element_text(size = 14, face = "bold"),
+    plot.subtitle = element_text(size = 10),
+    plot.title.position = "plot",
+    plot.caption.position = "plot",
+    plot.caption = element_text(margin = margin(t = 0.2, b = 0, unit = "cm"), size = 7),
+    axis.title = element_text(size = 8),
+    axis.title.x = element_text(margin = margin(t = 0.25, b = 0, unit = "cm"), face = "bold"),
+    axis.title.y = element_text(margin = margin(r = 0.25, l = 0, unit = "cm"), face = "bold"),
+    axis.text = element_text(size = 8),
+    legend.position = "top",
+    legend.title = element_blank(),
+    legend.text = element_text(size = 8),
+    panel.grid.major.y = element_line(color = "gray90"),
+    panel.grid.minor.y = element_blank(),
+    panel.grid.major.x = element_blank(), 
+    panel.grid.minor.x = element_blank()
+       )
+```
+
+
+With this logged transformation applied, we see that the regression line fits the data much more accurately. This helps us have more accurate results in this simulation.  
+
+
+
+#### Our Family's Car 
+
+This section is an application of the regression analysis preformed above. This is how our car compares using the model. We bought it for $1,700 with 120,000 miles on it. Currently, it has 153,000 miles on it. That means we drove 30,000 miles since we bought it!
+Since we have the current mileage of the car (the explanatory variable) we can apply our car to the regression. 
+  - This is how much the model says we can resell it for.
+
+
+```{r}
+ggplot(car_data, aes(x=Miles, y=Price)) + 
+  geom_point(color="navyblue", size = 3) +
+  geom_smooth(method = "lm", formula = y ~ log(x), se = FALSE, color = "orange")+
+  geom_point(x = 120000, 
+             y = 1700, 
+             size = 5, 
+             color = "firebrick")+
+  geom_vline(xintercept = 120000, alpha = 0.3, color = "firebrick", linetype = "dashed")+
+  geom_hline(yintercept = 1700, alpha = 0.3, color = "firebrick", linetype = "dashed")+
+  geom_text(x = 120000, 
+            y = 500, 
+            label = "Purchased", 
+            color = "firebrick",
+            size = 6)+
+  geom_point(x =153422, 
+             y = 4610, 
+             size = 6, 
+             color = "darkgreen")+
+  geom_vline(xintercept = 153422, alpha = 0.3, color = "darkgreen", linetype = "dashed")+
+  geom_hline(yintercept = 4610, alpha = 0.3, color = "darkgreen", linetype = "dashed")+
+  geom_text(x =153422, 
+            y = 7000, 
+            label = "Current", 
+            color = "darkgreen", 
+            size = 6)+
+  scale_x_continuous(labels = scales::comma)+
+  labs(title="", 
+       x="Mileage", 
+       y="Price $") + 
+  theme_test()+
+  theme(
+    plot.margin = margin(0.5, 0.5, 0.5, 0.5, unit = "cm"),
+    plot.title = element_text(size = 14, face = "bold"),
+    plot.subtitle = element_text(size = 10),
+    plot.title.position = "plot",
+    plot.caption.position = "plot",
+    plot.caption = element_text(margin = margin(t = 0.2, b = 0, unit = "cm"), size = 7),
+    axis.title = element_text(size = 8),
+    axis.title.x = element_text(margin = margin(t = 0.25, b = 0, unit = "cm"), face = "bold"),
+    axis.title.y = element_text(margin = margin(r = 0.25, l = 0, unit = "cm"), face = "bold"),
+    axis.text = element_text(size = 8),
+    legend.position = "top",
+    legend.title = element_blank(),
+    legend.text = element_text(size = 8),
+    panel.grid.major.y = element_line(color = "gray90"),
+    panel.grid.minor.y = element_blank(),
+    panel.grid.major.x = element_blank(), 
+    panel.grid.minor.x = element_blank()
+       )
+
+```
+
+
+This means that we can sell our car for more than what we purchased the car. This also means (only considering these two factors of price and mileage) the car still has much more life to it.  
+
+
+
+#### Data Table
+
+```{r}
+datatable(car_data)
+```
+
+
+
+
+<!-- # Code Graveyard
+
+
+Our car: 
+
+  - Year: 2000
+  - Purchased_Mileage: 120000
+  - Purchase_Price: 1700
+  - Current_Mileage: 153422
+
+SSE <- sum( (car_data$Price - mylm.log$fit)^2 )
+plot(Price ~ Miles, data = car_data)
+b <- coef(mylm.log)
+curve(exp(b[1] +b[2]*x), add = TRUE) 
+
+```{r}
+plot(Price ~ Miles, data = car_data)
+abline(mylm)
+```
+
+```{r}
+# Logged graph and regression line
+plot(log(Price) ~ Miles, data = car_data)
+abline(mylm.log)
+```
+
+```{r}
+# Simple Graph, Logged Regression
+plot(Price ~ Miles, data = car_data)
+b <- coef(mylm.log)
+curve(exp(b[1] +b[2]*x), add = TRUE) 
+```
+
+$$
+  \underbrace{\hat{Y}_i}_\text{Price} = 9.90 -0.09022 \times \underbrace{X_i}_\text{Mileage}
+$$
+ -->
