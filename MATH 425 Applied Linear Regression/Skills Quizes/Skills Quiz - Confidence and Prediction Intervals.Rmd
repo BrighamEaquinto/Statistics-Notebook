@@ -60,3 +60,26 @@ $$
 mylm = lm()
 
 
+
+```{r}
+
+mylm <- lm(Scale~Length, data = wblake)
+summary(mylm)
+
+mylm.sqrt <- lm(sqrt(Scale)~Length, data = wblake)
+summary(mylm.sqrt)
+
+#coef just grabs things from the lm summary
+
+b <- coef(mylm)
+b.sqrt <- coef(mylm.sqrt)
+
+ggplot(wblake, aes(Length, Scale))+
+  geom_point()+
+  stat_function(fun = function(x) b[1] + b[2]* x, color = "red")+
+  stat_function(fun = function(x) (b.sqrt[1] + b.sqrt[2]* x)^2, color = "pink")
+
+predict(mylm.sqrt, data.frame(Length = 250), interval = "prediction")^2
+
+```
+

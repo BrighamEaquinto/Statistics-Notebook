@@ -41,7 +41,7 @@ options(scipen = 5) # this fixes the scientific notation problem in the mileage 
 # getOption("scipen")
 # options()
 
-car_data <- read_csv("C:/Users/brigh/OneDrive - BYU-Idaho/8th Semester- Fall 2021/MATH 425 Applied Linear Regression/Analyses/data/car_data.csv")
+car_data <- read_csv("C:/Users/brigh/OneDrive - BYU-Idaho/8th Semester- Fall 2021/Math 425 Applied Linear Regression (Statistics-Notebook)/MATH 425 Applied Linear Regression/Analyses/data/car_data.csv")
   
 # View(car_data)
 ```

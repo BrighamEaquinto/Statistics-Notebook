@@ -54,7 +54,7 @@ library(DT)
 
 
 # Data
-weather_data <- read.csv("C:/Users/brigh/OneDrive - BYU-Idaho/8th Semester- Fall 2021/MATH 425 Applied Linear Regression/Analyses/data/weather_data.csv") 
+weather_data <- read_csv("C:/Users/brigh/OneDrive - BYU-Idaho/8th Semester- Fall 2021/Math 425 Applied Linear Regression (Statistics-Notebook)/MATH 425 Applied Linear Regression/Analyses/data/weather_data.csv")
 # View(weather_data) 
 
 ```
@@ -307,6 +307,16 @@ This visualization causes reason to believe that the distribution is not exactly
 This plot can tell us if there is any bias the data. If there are any general trends or patterns, the error terms are considered not independent and the regression assumption is violated. 
 
 Our plot does not cause reason to believe the regression assumption is violated. 
+
+
+<br>
+
+
+
+## Prediction Interval 
+
+
+
 
 <br>
 

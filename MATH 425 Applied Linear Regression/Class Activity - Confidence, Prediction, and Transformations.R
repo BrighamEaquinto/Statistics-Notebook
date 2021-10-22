@@ -7,6 +7,10 @@ library(car)
 
 mylm <- lm(gasbill~temp, data = Utilities)
 summary(mylm)
+hist(mylm$residuals)
+plot(gasbill~temp, data = Utilities)
+abline(mylm)
+
 boxCox(mylm, lambda = seq(0,1,.1))
 mylmt <- lm(sqrt(sqrt(gasbill)) ~ temp, data = Utilities)
 

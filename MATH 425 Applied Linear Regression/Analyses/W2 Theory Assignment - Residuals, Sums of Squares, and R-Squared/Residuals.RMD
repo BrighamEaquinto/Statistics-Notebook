@@ -19,47 +19,47 @@ library(readxl)
 ```
 
 
-
 This document will perform a linear regression using a weather data set on the maximum air pressure and max wind speed. We will diagnose five important aspects of this regression: **residuals, SSE, SSR, SSTO, and R-Squared**. At the end of this study guide you will have a better understanding of the importance of these in a linear regression. 
 
 
-
 ```{r data}
-weather_data <- read_csv("C:/Users/brigh/OneDrive - BYU-Idaho/8th Semester- Fall 2021/MATH 425 Applied Linear Regression/Analyses/data/weather_data.csv")
+library(readr)
+weather_data <- read_csv("C:/Users/brigh/OneDrive - BYU-Idaho/8th Semester- Fall 2021/Math 425 Applied Linear Regression (Statistics-Notebook)/MATH 425 Applied Linear Regression/Analyses/data/weather_data.csv")
 # View(weather_data)
-
-mylm <- lm(pressure_max~wind_mph_max, data = weather_data)
-# summary(mylm) 
-
-regression_plot <- ggplot(weather_data, aes( wind_mph_max, pressure_max))+
-  geom_point(size = 3)+
-  geom_smooth(method = "lm", formula = y~x, se = FALSE)+
-  labs(title = "Relationship Between Max Wind Speed and Max Air Pressure", 
-       subtitle = "",
-       caption = "",
-       x = "Max Wind Speed (MPH)", 
-       y = "Max Air Pressure")+
-  theme_test()+
-  theme(
-    plot.margin = margin(0.5, 0.5, 0.5, 0.5, unit = "cm"),
-    plot.title = element_text(size = 14, face = "bold"),
-    plot.subtitle = element_text(size = 10),
-    plot.title.position = "plot",
-    plot.caption.position = "plot",
-    plot.caption = element_text(margin = margin(t = 0.2, b = 0, unit = "cm"), size = 7),
-    axis.title = element_text(size = 8),
-    axis.title.x = element_text(margin = margin(t = 0.25, b = 0, unit = "cm"), face = "bold"),
-    axis.title.y = element_text(margin = margin(r = 0.25, l = 0, unit = "cm"), face = "bold"),
-    axis.text = element_text(size = 8),
-    legend.position = "top",
-    legend.title = element_blank(),
-    legend.text = element_text(size = 8),
-    panel.grid.major.y = element_line(color = "gray90"),
-    panel.grid.minor.y = element_blank(),
-    panel.grid.major.x = element_blank(), 
-    panel.grid.minor.x = element_blank())
-
-regression_plot
+# View(weather_data)
+# 
+# mylm <- lm(pressure_max~wind_mph_max, data = weather_data)
+# # summary(mylm) 
+# 
+# regression_plot <- ggplot(weather_data, aes( wind_mph_max, pressure_max))+
+#   geom_point(size = 3)+
+#   geom_smooth(method = "lm", formula = y~x, se = FALSE)+
+#   labs(title = "Relationship Between Max Wind Speed and Max Air Pressure", 
+#        subtitle = "",
+#        caption = "",
+#        x = "Max Wind Speed (MPH)", 
+#        y = "Max Air Pressure")+
+#   theme_test()+
+#   theme(
+#     plot.margin = margin(0.5, 0.5, 0.5, 0.5, unit = "cm"),
+#     plot.title = element_text(size = 14, face = "bold"),
+#     plot.subtitle = element_text(size = 10),
+#     plot.title.position = "plot",
+#     plot.caption.position = "plot",
+#     plot.caption = element_text(margin = margin(t = 0.2, b = 0, unit = "cm"), size = 7),
+#     axis.title = element_text(size = 8),
+#     axis.title.x = element_text(margin = margin(t = 0.25, b = 0, unit = "cm"), face = "bold"),
+#     axis.title.y = element_text(margin = margin(r = 0.25, l = 0, unit = "cm"), face = "bold"),
+#     axis.text = element_text(size = 8),
+#     legend.position = "top",
+#     legend.title = element_blank(),
+#     legend.text = element_text(size = 8),
+#     panel.grid.major.y = element_line(color = "gray90"),
+#     panel.grid.minor.y = element_blank(),
+#     panel.grid.major.x = element_blank(), 
+#     panel.grid.minor.x = element_blank())
+# 
+# regression_plot
 
 ```
 
