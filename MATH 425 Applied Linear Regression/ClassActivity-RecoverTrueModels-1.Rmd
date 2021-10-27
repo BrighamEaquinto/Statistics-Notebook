@@ -1,0 +1,132 @@
+---
+title: "Recovering a True Model"
+output: 
+  html_document:
+    theme: cerulean
+    code_folding: hide
+---
+
+```{r, message=FALSE, warning=FALSE}
+p1Data <- read.csv("p1Data-1.csv", header=TRUE)
+p2Data <- read.csv("p2Data-1.csv", header=TRUE)
+p3Data <- read.csv("p3Data-1.csv", header=TRUE)
+```
+
+## Part 1 - Recovering a True Model (Beginner Level)
+
+We believe the true model to be...
+
+$$
+  Y_i = \underbrace{\beta_0 + \beta_1 X_{4i} + \beta_2 X_{4i} X}_\text{The True Model} + \epsilon_i
+$$
+
+And estimate that model by...
+
+$$
+  \hat{Y}_i = ...
+$$
+
+with our estimate of $\sigma$ as 13.11. 
+
+```{r}
+pairs(p1Data)
+pairs(p1Data, panel = panel.smooth, col = as.factor(p1Data$X2))
+
+mylm1 <- lm(Y~X4, data = p1Data)
+summary(mylm1)
+
+plot(mylm1$residuals ~ ., data = p1Data, col = as.factor(p1Data$X2))
+# this period is like SQL's *. It selects all columns one at a time in this case)
+
+mylm2 <- lm(Y~X4 + X2 + X4:X2, data = p1Data)
+summary(mylm2)
+
+
+
+
+mylm1 <- lm(Y~X2, data = p1Data)
+summary(mylm1)
+
+plot(mylm1$residuals ~ ., data = p1Data, col = as.factor(p1Data$X2))
+# this period is like SQL's *. It selects all columns one at a time in this case)
+
+mylm2 <- lm(Y~X4 + X2, data = p1Data)
+summary(mylm2)
+
+
+# 
+pairs(cbind(Res = mylm2$residuals, fit = mylm2$fitted.values, p1Data), panel=panel.smooth, col = as.factor(p1Data$X2))
+
+mylm3 <- lm(Y~X4 + X2 + X3, data = p1Data)
+summary(mylm3)
+# remember, is a variable is not usless is it's not significant. Usefulness at this point in the model at predicting Y. 
+
+
+mylm4 <- lm(Y~X4 + X2 + X4:X2, data = p1Data)
+summary(mylm4)
+# remember, interactions are what let things tilt/ 
+
+
+mylm5 <- lm(Y~X4 + X4:X2, data = p1Data)
+summary(mylm5)
+
+
+```
+
+Y:X2 & Y:X4 have decent patterns. 
+
+
+
+<br>
+
+## Part 2 - Recovering a True Model (Intermediate Level)
+
+We believe the true model to be...
+
+$$
+  Y_i = \underbrace{...}_\text{The True Model} + \epsilon_i
+$$
+
+And estimate that model by...
+
+$$
+  \hat{Y}_i = ...
+$$
+
+with our estimate of $\sigma$ as ...
+
+```{r}
+
+```
+
+
+
+## Part 3 - Recovering a True Model (Advanced Level)
+
+We believe the true model to be...
+
+$$
+  Y_i = \underbrace{...}_\text{The True Model} + \epsilon_i
+$$
+
+And estimate that model by...
+
+$$
+  \hat{Y}_i = ...
+$$
+
+with our estimate of $\sigma$ as ...
+
+```{r}
+
+```
+
+
+
+
+
+Steps for Regression Battleship:
+1. start with pairs() plot
+2. look for patterns 
+3. then go for the plot(mylm1$residuals ~ ., p1data) and look for thing
+4. edit the lm based on your previous findings
