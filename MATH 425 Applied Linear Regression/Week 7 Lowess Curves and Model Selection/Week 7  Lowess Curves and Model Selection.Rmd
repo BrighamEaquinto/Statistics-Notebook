@@ -424,29 +424,109 @@ for (xc in 1:n){ #let each dot be the center dot, one at a time
 ### Question 1
 
 
+```{r}
+library(mosaic)
+View(Kidseet)
+
+# QUadratic
+
+lm1 <- lm(length ~ width + I(width^2), data = KidsFeet)
+summary(lm1)
+b <- coef(lm1)
+plot(length ~ width, data = KidsFeet, # this is only to create the x and y axis! No squared values or anything yet
+     xlim = c(0,10), ylim = c(15, 30))
+curve(b[1] + b[2]*x + b[3]*x^2, add = TRUE)
+
+
+
+```
+
+
+```{r}
+# Two-Line (two intercepts, same slope. Parallel line)
+
+lm2 <- lm(length ~ width + sex, data = KidsFeet)
+summary(lm2)
+
+plot(length ~ width, data = KidsFeet, col = as.factor(sex), pch = 16)
+b <- coef(lm2)
+
+x2 = 0 
+curve(b[1] + b[2]*x +b[3]*x2, add = TRUE)
+x2 = 1
+curve(b[1] + b[2]*x +b[3]*x2, add = TRUE, col = "red")
+legend("topleft", legend = c("B","G"), pch = 16, col = c("black", "red"))
+
+```
+
+```{r}
+# Two-Line Quadratic
+
+sex = 0
+lm3 <- lm(length ~ width + I(width^2) + sex + I(width^2):sex, KidsFeet)
+summary(lm3)
+b <- coef(lm3)
+
+plot(length ~ width, data = KidsFeet, col = as.factor(sex), pch = 16)
+sex = 0
+curve(b[1] + b[2]*x +b[3]*x^2 + b[4]*sex +b[5] * x^2 * sex, add = TRUE)
+sex = 1
+curve(b[1] + b[2]*x +b[3]*x^2 + b[4]*sex +b[5] * x^2 * sex, add = TRUE, col = "red")
+legend("topleft", legend = c("B","G"), pch = 16, col = c("black", "red"))
+
+```
+
+```{r}
+lm4 <- lm(length ~ width, KidsFeet)
+summary(lm4)
+plot(length ~ width, KidsFeet)
+abline(lm4)
+
+```
+
 
 ### Question 2 
 
+```{r}
+lm1 <- lm(height ~ age, data = Loblolly)
+summary(lm1)
+plot(height ~ age, data = Loblolly)
+abline(lm1)
+lines(lowess(Loblolly$age, Loblolly$height), col = "Firebrick")
+
+
+lm2 <- lm(height ~ age + I(age^2), data = Loblolly)
+b <- coef(lm2)
+curve(b[1] + b[2]*x + b[3] * x^2, add = TRUE, col = "skyblue")
+
+```
 
 
 ### Question 3
 
 
 
+```{r}
+# Part A
+?Utilities
+# pairs() is for  dataset
+
+pairs(Utilities, panel = panel.smooth)
+
+# Part B
+lm1 <- lm(elecbill ~ kwh, data = Utilities)
+summary(lm1)
+
+par(mfrow=c(1,3))
+plot(lm1,which=1:2)
+plot(lm1$residuals)
 
 
 
 
+cbind(R = lm1$res, Fit = lm1$fit, Utilities)
 
-
-
-
-
-
-
-
-
-
+```
 
 
 
