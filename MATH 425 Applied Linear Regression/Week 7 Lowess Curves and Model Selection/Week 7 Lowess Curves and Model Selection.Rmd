@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 p1Data <- read.csv("C:/Users/brigh/OneDrive - BYU-Idaho/8th Semester- Fall 2021/Math 425 Applied Linear Regression (Statistics-Notebook)/MATH 425 Applied Linear Regression/p1Data-1.csv", header=TRUE)
 p2Data <- read.csv("C:/Users/brigh/OneDrive - BYU-Idaho/8th Semester- Fall 2021/Math 425 Applied Linear Regression (Statistics-Notebook)/MATH 425 Applied Linear Regression/p2Data-1.csv", header=TRUE)
 p3Data <- read.csv("C:/Users/brigh/OneDrive - BYU-Idaho/8th Semester- Fall 2021/Math 425 Applied Linear Regression (Statistics-Notebook)/MATH 425 Applied Linear Regression/p3Data-1.csv", header=TRUE)
-```
+``` 
 
 ### Part 1 - Recovering a True Model (Beginner Level)
 
