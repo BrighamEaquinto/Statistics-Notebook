@@ -10,10 +10,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-install.packages("alr4")
+# install.packages("alr4")
 library(alr4) 
 library(tidyverse)
-?BGSall
+# ?BGSall
 # View(BGSall)
 colnames(BGSall)
 ```
@@ -56,8 +56,6 @@ ggplot(BGSall, aes(HT2, HT18))+
 $$
   \underbrace{Y_i}_\text{Height 18} = \beta_0 + \beta_1 \underbrace{X_i}_\text{Height 2} + \epsilon_i \quad \text{where} \ \epsilon_i \sim N(0, \sigma^2)
 $$
-
-mylm = lm()
 
 
 
