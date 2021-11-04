@@ -1,0 +1,26 @@
+---
+title: "Week 8"
+author: "Brigham Eaquinto"
+date: "11/3/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Don't let your graphs exit the top or bottom. Only the sides. 
+
+y = 4 + 1.2x - 0.3x^3 + Ei
+y = 1 - 3.7x - 0.1x^2 + 0.3x^3 + Ei
+
+
+on/off switch for the change_line. Attached to each beta.  
+Do not cube or square the on off switch (x2)
+Play around with the setseeds. 
+runif is bad. its unifrom. 
+
+
+Low variability and hig variablity 
+
+all pvalues must be significant

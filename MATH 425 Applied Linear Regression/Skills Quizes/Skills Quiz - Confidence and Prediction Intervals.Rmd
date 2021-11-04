@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
+```{r include = FALSE, message=FALSE, echo=FALSE, warning=FALSE}
 # install.packages("alr4")
 library(alr4) 
 library(tidyverse)
