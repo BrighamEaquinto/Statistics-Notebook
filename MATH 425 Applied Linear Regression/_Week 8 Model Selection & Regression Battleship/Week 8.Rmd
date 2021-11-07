@@ -7,8 +7,14 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
 ```
 
+
+
+```{r}
+5+5 
+```
 Don't let your graphs exit the top or bottom. Only the sides. 
 
 y = 4 + 1.2x - 0.3x^3 + Ei
