@@ -5,6 +5,8 @@ output:
   html_document:
     theme: cerulean
     code_folding: hide
+editor_options: 
+  chunk_output_type: inline
 ---
 
 ```{r message=FALSE, warning=FALSE}
@@ -166,9 +168,13 @@ set.seed(122) #This ensures the randomness is the "same" everytime if you play t
 Provide a 2D scatterplot that shows both your *true* model (dashed lines) and *estimated* model (solid lines) on the same scatterplot. This should match your Desmos graph. 
 
 ```{r bad chunk}
-plot(y ~ x4, data = rbdata, col = as.factor(x5))
-
 b <- coef(mylm)
+
+```
+
+```{r other chunk}
+
+plot( y ~ x4, data = rbdata, col = as.factor(x5) )
 
 curve( b[1] + b[2]*x, add = TRUE, col = "skyblue") # base line
 
