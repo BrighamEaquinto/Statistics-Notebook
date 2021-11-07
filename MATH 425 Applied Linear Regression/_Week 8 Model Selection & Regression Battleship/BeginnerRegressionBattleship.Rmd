@@ -85,8 +85,109 @@ For the beginner level competition, there are also five official rules your mode
 Start by creating a picture of your true model in Desmos. Snip a screenshot of your completed model. Include a picture of your Desmos graph showing your true model.
 
 
-![]("C:/Users/brigh/Downloads/beginner_desmos.png") 
+![](./beginner_desmos.png) 
 
 
+
+
+## Code
+
+Use the R-chunks below to create your simulated sample of data from your true regression model.
+
+
+```{r}
+set.seed(122) #This ensures the randomness is the "same" everytime if you play the entire R-chunk as one entire piece of code. If you run lines separately, your data might not come out the same every time. You can pick any integer value you want for set.seed. Each choice produces a different sample, so you might want to play around with a few different choices.
+## To begin, decide on your sample size. (You may have to revise it later to ensure all values in your lm(...) are significant.)
+  
+ n <- 230
+ 
+## Then, create 10 X-variables using functions like rnorm(n, mean, sd), rchisq(n, df), rf(n, df1, df2), rt(n, df), rbeta(n, a, b), runif(n, a, b) or sample(c(1,0), n, replace=TRUE)... ## To see what any of these functions do, run codes like hist(rchisq(n, 3)). These functions are simply allowing you to get a random sample of x-values. But the way you choose your x-values can have quite an impact on what the final scatterplot of the data will look like.
+ x1 <- sample(c(0,1))
+ x2 <- rbeta(n, 2, 6) #replace this
+ x3 <- rnorm(n, 5, 4.5) #replace this
+ x4 <- runif(n, -6, 6) #replace this
+ x5 <- sample(c(0, 1), n, replace = TRUE) #replace this
+ 
+## Then, create betas, sigma, normal error terms and y
+ 
+ beta0 <- 0.1
+ beta1 <- 0.2
+ beta2 <- -0.0009
+ 
+ sigma <- .3 #change to whatever positive number you want
+ 
+ ################################
+ # You ARE NOT ALLOWED to change this part:
+ epsilon_i <- rnorm(n, 0, sigma)
+ ################################ 
+ 
+ #An example of how to make Y...
+ # y <-  beta0 + beta1*X1 + beta2*X2 + beta3*X4*X2 + epsilon_i
+ 
+ y <-  beta0 + beta1*x4 + beta2*x4^3 * x5 + epsilon_i
+ 
+   #...edit this code and replace it with your model. Don't forget the + epsilon_i!
+ 
+ 
+ ## Now, you need to load your x-variables and y-variable 
+ ## into a data set.
+ # You can include Y' or X' instead of Y or X if you wish.
+ # Remember, only these functions are allowed when transforming
+ # variables: 1/Y^2, 1/Y, log(Y), sqrt(Y), sqrt(sqrt(Y)), Y^2, Y^3, 1/X^2, 1/X, log(X), sqrt(X), sqrt(sqrt(X)), X^2, X^3, X^4, X^5. 
+ #########################################################
+ # ILLEGAL: Y = (beta0 + beta1*X5)^2 + epsilon_i #########
+ #########################################################
+ # Legal: sqrt(Y) = beta0 + beta1*X5^2 + epsilon_i #######
+ #########################################################
+ # You can only transform individual terms, not groups of terms.
+ # And the beta's cannot be part of the x-transformations.
+ # This loads your data into a data set:
+ rbdata <- data.frame(y, x1, x2, x3, x4, x5)
+ 
+ #Now fit your model to make sure it comes out significant:
+ mylm <- lm(y ~ x4 + I(x4^3):x5, data=rbdata) #edit this code to be your true model
+ summary(mylm) 
+ #all p-values must be significant
+ #the R^2 value must be greater than or equal to 0.30.
+ 
+# Once you are done with creating your model, and have successfully
+# graphed it (see below), un-comment the following `write.csv` code,
+# then, PLAY this ENTIRE R-chunk to write your data to a csv.
+ # write.csv(rbdata, "rbdata.csv", row.names=FALSE)
+# The above code writes the dataset to your "current directory"
+# To see where that is, use: getwd() in your Console.
+# Find the rbdata.csv data set and upload it to I-Learn.
+```
+
+
+
+## R Plot
+
+Provide a 2D scatterplot that shows both your *true* model (dashed lines) and *estimated* model (solid lines) on the same scatterplot. This should match your Desmos graph. 
+
+```{r bad chunk}
+plot(y ~ x4, data = rbdata, col = as.factor(x5))
+
+b <- coef(mylm)
+
+curve( b[1] + b[2]*x, add = TRUE, col = "skyblue") # base line
+
+curve( (b[1] + b[2]*x) + b[3]*x^3, add = TRUE, col = "green") # change line 
+
+```
+
+
+## Math Model
+
+Write out your "true" model in mathematical form. Make sure it matches your code. This could be "painful" if you chose a complicated model.
+
+$$
+  Y_i = \beta_0 + \beta1 * X_4 + \epsilon_i \quad \text{where} \ \epsilon_i \sim N(0, \sigma^2)
+$$
+
+
+## Results
+
+Once the Regression Battleship competition is completed, you will be given instructions on how to complete this section. The basic idea is to compare the three guesses at your true model (from two peers, and your teacher) to decide who won (i.e., who had the closest guess).
 
 
