@@ -1,0 +1,99 @@
+---
+title: "Regression Battleship - Final Guess"
+author: "YOUR NAME HERE"
+output: 
+  html_document:
+    theme: cerulean
+    toc: true
+    toc_float: true
+    code_folding: hide
+---
+
+```{r}
+library(pander)
+library(tidyverse)
+# Read in the RBdata here:
+rbdata <- read_csv("MATH 425 Applied Linear Regression/Week 9/saunders_Fall21_rbdata.csv")
+# View(rbdata)
+
+```
+
+## The Model of your Guess
+
+<!-- Enter your guessed model in the math notation below. -->
+
+$$
+  Y_i = \beta_0 + ...YourGuess... + \epsilon_i
+$$
+
+## The lm(...) of your Guess
+
+<!-- Provide your estimates of each model coefficient along with the Adjusted R-squared of your model:-->
+
+```{r}
+## Input your lm(Y ~ ... ,data=rbdata)
+final.lm <- lm(Y ~ X6 + X9, data=rbdata) #replace the "1" with your model
+```
+
+```{r}
+###################################################################
+#Don't edit this part:
+pander(summary(final.lm)$coefficients)
+```
+
+**Adjusted R-squared**: `r summary(final.lm)$adj.r.squared`
+
+
+## The Plot of your Guess
+
+```{r}
+# Draw a picture of your guess at the model here:
+# Remember, your guess only counts for credit if you plot it.
+
+```
+
+
+
+
+
+
+```{r}
+
+# take out least significant first
+
+
+pairs(rbdata)
+pairs(rbdata, col = interaction(x4, x5))
+
+
+plot(y~x10, data = rbdata, col = interaction(x4, x5, x9))
+
+mylm <- lm(y ~ x10*., data = rbdata) # x10 * all other columns as interactions
+summary(mylm)
+
+
+mylm <- lm(y~x10 + x4 + x5 + x9 + x10:x4 + x10:x5 + x10:x9, data = rbdata)
+summary(mylm)
+
+mylm <- lm(y ~ I(x10^3) * ., data = rbdata)
+summary(mylm)
+
+
+mylm <- lm(y~x10 + x4 + x5 + x9 + x10:x4 + x10:x5 + I(x10^3):x5 + I(x10^3):x9, data = rbdata)
+summary(mylm)
+
+mylm <- lm(y ~ I(x10^2) * ., data = rbdata)
+summary(mylm)
+
+mylm <- lm(y~x10 + x4 + x5 + x9 + x10:x4 + x10:x5 + I(x10^2):x4 + I(x10^2):x5 + I(x10^3):x5 + I(x10^3):x9, data = rbdata)
+summary(mylm)
+
+
+```
+ 
+
+ 
+
+ 
+
+ 
