@@ -85,8 +85,25 @@ summary(mylm)
 mylm <- lm(y ~ I(x10^2) * ., data = rbdata)
 summary(mylm)
 
-mylm <- lm(y~x10 + x4 + x5 + x9 + x10:x4 + x10:x5 + I(x10^2):x4 + I(x10^2):x5 + I(x10^3):x5 + I(x10^3):x9, data = rbdata)
+
+
+
+mylm <- lm(y~x10 + x4 + x5 + x9 + x10:x5 + I(x10^2):x4 + I(x10^2):x5 + I(x10^3):x9, data = rbdata)
 summary(mylm)
+
+b <- coef(mylm)
+plot(y ~ x10, data = rbdata)
+x4 = 0
+x5 = 0
+x9 = 0
+curve(b[1] + b[2]*x, add = TRUE) 
+x4 = 1
+curve(b[1] + b[2]*x + 
+      b[3]*x4 + b[7]*x4*x^2, add = TRUE)
+
+# plot(y~x10, data = rbdata, col = as.factor(x10))
+
+
 
 
 ```
