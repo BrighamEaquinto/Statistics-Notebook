@@ -50,6 +50,7 @@ There are five official rules your model must abide by. If you break any of the 
     `sqrt(sqrt(Y))`, 
     `Y^2`, 
     `Y^3`, 
+    
     `1/X^2`, 
     `1/X`, 
     `log(X)`, 

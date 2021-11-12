@@ -1,0 +1,119 @@
+---
+title: "Regression Battleship - Final Guess"
+author: "Brigham Eaquinto"
+output: 
+  html_document:
+    theme: cerulean
+    toc: true
+    toc_float: true
+    code_folding: hide
+---
+
+```{r}
+library(pander)
+library(tidyverse)
+# Read in the RBdata here:
+rbdata <- read_csv("saunders_Fall21_rbdata.csv")
+# View(rbdata)
+
+```
+
+## The Model of your Guess
+
+<!-- <!-- Enter your guessed model in the math notation below. --> -->
+
+<!-- $$ -->
+<!--   Y_i = b_0 + b_1x10 + b_2x5 + b_3x9 + b_4x10x4 + b_5x10x5 + b_6x10^2x4 + b_7x10^3x4 + b_8x10^3x5 + b_9x10^3x9 + \epsilon_i -->
+<!-- $$ -->
+
+<!-- ## The lm(...) of your Guess -->
+
+<!-- <!-- Provide your estimates of each model coefficient along with the Adjusted R-squared of your model:--> -->
+
+<!-- ```{r} -->
+<!-- ## Input your lm(Y ~ ... ,data=rbdata) -->
+<!-- final.lm <- lm(y~x10 + x5 + x9 + x10:x4 + x10:x5 + I(x10^2):x4 + I(x10^3):x4 + I(x10^3):x5 + I(x10^3):x9, data = rbdata)  -->
+<!-- summary(final.lm) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- ################################################################### -->
+<!-- #Don't edit this part: -->
+<!-- pander(summary(final.lm)$coefficients) -->
+<!-- ``` -->
+
+**Adjusted R-squared**: 
+
+<!-- ## The Plot of your Guess -->
+
+<!-- ```{r} -->
+<!-- # Draw a picture of your guess at the model here: -->
+<!-- # Remember, your guess only counts for credit if you plot it. -->
+
+
+<!-- b <- coef(final.lm) -->
+
+
+<!-- interactions <- interaction(as.factor(rbdata$x4),  -->
+<!--                             as.factor(rbdata$x5),  -->
+<!--                             as.factor(rbdata$x9) -->
+<!--                             ) -->
+
+<!-- plot(y ~ x10, data = rbdata, col = interactions) -->
+
+
+<!-- # curve(b[1] + b[2]*x + b[3]*x5 + b[4]*x9 + b[5]*x*x4 + b[6]*x*x5 + b[7]*I(x^2)*x4 + b[8]*I(x^3)*x4 + b[9]*I(x^3)*x5 + b[10]*I(x^3)*x9, add = TRUE) -->
+
+
+<!-- x4 = 0 # 0 or 1 -->
+<!-- x5 = 0 # 0 or 1 -->
+<!-- x9 = 0 # 0, 1, 2, or 3 -->
+
+<!-- curve(b[1] + b[2]*x + b[3]*x5 + b[4]*x9 + b[5]*x*x4 + b[6]*x*x5 + b[7]*I(x^2)*x4 + b[8]*I(x^3)*x4 + b[9]*I(x^3)*x5 + b[10]*I(x^3)*x9, add = TRUE) -->
+
+<!-- x4 = 0  -->
+<!-- x5 = 1  -->
+<!-- x9 = 0  -->
+
+<!-- curve(b[1] + b[2]*x + b[3]*x5 + b[4]*x9 + b[5]*x*x4 + b[6]*x*x5 + b[7]*I(x^2)*x4 + b[8]*I(x^3)*x4 + b[9]*I(x^3)*x5 + b[10]*I(x^3)*x9, add = TRUE) -->
+
+<!-- x4 = 0  -->
+<!-- x5 = 1 -->
+<!-- x9 = 1  -->
+
+<!-- curve(b[1] + b[2]*x + b[3]*x5 + b[4]*x9 + b[5]*x*x4 + b[6]*x*x5 + b[7]*I(x^2)*x4 + b[8]*I(x^3)*x4 + b[9]*I(x^3)*x5 + b[10]*I(x^3)*x9, add = TRUE) -->
+
+<!-- ------------------ -->
+<!-- x4 = 0  -->
+<!-- x5 = 1  -->
+<!-- x9 = 2  -->
+
+<!-- curve(b[1] + b[2]*x + b[3]*x5 + b[4]*x9 + b[5]*x*x4 + b[6]*x*x5 + b[7]*I(x^2)*x4 + b[8]*I(x^3)*x4 + b[9]*I(x^3)*x5 + b[10]*I(x^3)*x9, add = TRUE) -->
+<!-- ------------------ -->
+
+<!-- x4 = 0  -->
+<!-- x5 = 1  -->
+<!-- x9 = 3  -->
+
+<!-- curve(b[1] + b[2]*x + b[3]*x5 + b[4]*x9 + b[5]*x*x4 + b[6]*x*x5 + b[7]*I(x^2)*x4 + b[8]*I(x^3)*x4 + b[9]*I(x^3)*x5 + b[10]*I(x^3)*x9, add = TRUE) -->
+
+<!-- x4 = 1  -->
+<!-- x5 = 0  -->
+<!-- x9 = 0  -->
+
+<!-- curve(b[1] + b[2]*x + b[3]*x5 + b[4]*x9 + b[5]*x*x4 + b[6]*x*x5 + b[7]*I(x^2)*x4 + b[8]*I(x^3)*x4 + b[9]*I(x^3)*x5 + b[10]*I(x^3)*x9, add = TRUE) -->
+
+
+<!-- ``` -->
+
+
+
+
+
+
+
+
+
+
+
+
